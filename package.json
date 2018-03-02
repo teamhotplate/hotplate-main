@@ -13,7 +13,8 @@
     "client": "babel-node scripts/start-client.js",
     "build": "babel-node scripts/build.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "installDeps": "yarn && cd client && yarn"
+    "installDeps": "yarn && cd client && yarn",
+    "postinstall" : "scripts/build.js"
   },
   "dependencies": {
     "babel-cli": "^6.26.0",
