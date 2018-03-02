@@ -1,6 +1,7 @@
 import bodyParser from 'body-parser';
 import express from 'express';
 import passport from 'passport';
+import path from 'path';
 
 import {} from 'dotenv/config';
 
@@ -11,13 +12,14 @@ import router from './routes';
 const app = express();
 
 // Enable Middleware
-app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json());
 app.use(passport.initialize());
 
 // Load routes
 app.use('/auth', router.auth);
 app.use('/api', router.api);
+app.use('/', router.client);
   
 // Listen on port 3000 when not in production
 const PORT = process.env.PORT || 3001
