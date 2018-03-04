@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 // import passportLocalMongoose from 'passport-local-mongoose';
 
 // Define a User Schema
-const UserSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
     username: {
       type: String,
       trim: true,
@@ -16,7 +16,7 @@ const UserSchema = new mongoose.Schema({
   });
 
 // Create a User Model from the above-defined Schema
-const UserModel = mongoose.model("User", UserSchema);
+const UserModel = mongoose.model("User", userSchema);
 
 // Export the User model
 export default UserModel;
