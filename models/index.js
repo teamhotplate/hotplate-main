@@ -1,5 +1,6 @@
+import Project from './Project';
 import User from './User';
 
-export { User };
+export { Project, User };
 
   
