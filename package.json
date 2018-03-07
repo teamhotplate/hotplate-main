@@ -11,7 +11,7 @@
     "dev": "concurrently \"nodemon server.js --exec babel-node\" \"npm run client\"",
     "installDeps": "yarn && cd client && yarn",
     "build": "babel-node scripts/build.js",
-    "server": "yarn run installDeps; yarn run build; babel-node server.js",
+    "server": "babel-node server.js",
     "client": "babel-node scripts/start-client.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

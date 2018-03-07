@@ -17,8 +17,57 @@ async function status (workingDir) {
   catch (e) {
      // handle the error
   }
-  
   return statusSummary;
+}
+
+function mkTempDirP() {
+  return new Promise(function(resolve, reject) { 
+    tmp.dir((err, workPath, cleanupCallback) => {
+      if (err) reject(err);
+      const rv = {
+        workPath: workPath,
+        cleanupCallback: cleanupCallback
+      };
+      resolve(rv);
+    });
+  });
+}
+
+async function fetchGitRepo(gitUri, gitRefSpec) {
+  try {
+
+    // Create a temporary work directory
+    console.log("Creating temp dir");
+    const { workPath, cleanupCallback } = await mkTempDirP();
+
+    // Create a subdirectory to store the repo we'll fetch
+    console.log("Creating repo subdirectory");
+    const repoPath = workPath + '/repo';
+    fs.mkdirSync(repoPath);
+
+    // Initialize a repo in the new directory
+    console.log("Initializing repo");
+    const repo = git(repoPath);
+    await repo.init();
+
+    // Add a remote for the repo
+    console.log("Adding git remote");
+    await repo.addRemote('origin', gitUri);
+
+    // Fetch 
+    console.log("Fetching");
+    await repo.fetch('origin', gitRefSpec);
+
+    // Checkout the branch
+    console.log("Checking out branch");
+    await repo.checkout(['--track', `origin/${gitRefSpec}`]);
+
+    return { workPath, cleanupCallback };
+
+  } catch(err) {
+    console.log(err);
+    throw(err);
+  }
 }
 
 router.get("/", function (req, res) {
@@ -27,6 +76,17 @@ router.get("/", function (req, res) {
   });
 });
 
+router.get("/:id", function (req, res) {
+  Project.findOne({ '_id': req.params.id }).then(async (projectData, err) => {
+    if (req.query.render === "true") {
+      console.log("Rendering artifacts.");
+      const { workPath, cleanupCallback } = await fetchGitRepo(projectData.gitUri, projectData.gitRefSpec);
+    }
+    res.json(projectData);
+  });
+});
+
+// This works, but is grotesque.. Convert this mess to async/await and break it up into small functions
 router.post("/", (req, res) => {
   // Create a Project with the data available to us in req.body
   console.log(req.body);
