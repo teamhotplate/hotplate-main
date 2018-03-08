@@ -1,6 +1,10 @@
 // import passport from 'passport';
-import fs from 'fs';
+import aws from 'aws-sdk';
+import dot from 'dot';
+import fs, { write } from 'fs';
 import git from 'simple-git/promise';
+import path from 'path';
+import targz from 'targz';
 import tmp from 'tmp';
 
 import { Router } from 'express';
@@ -9,16 +13,14 @@ import { Project } from '../models';
 
 const router = Router();
 
-async function status (workingDir) {  
-  let statusSummary = null;
-  try {
-     statusSummary = await git(workingDir).status();
-  }
-  catch (e) {
-     // handle the error
-  }
-  return statusSummary;
-}
+aws.config.update({
+  accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+  secretAccessKey: process.env.AES_SECRET_ACCESS_KEY
+});
+
+const s3 = new aws.S3();
+
+// Promise wrapper functions
 
 function mkTempDirP() {
   return new Promise(function(resolve, reject) { 
@@ -32,6 +34,66 @@ function mkTempDirP() {
     });
   });
 }
+
+function compressBundleP(basePath, bundlePath) {
+  return new Promise(function(resolve, reject) {
+    targz.compress({
+      src: basePath,
+      dest: bundlePath
+    }, (err) => {
+      if(err) {
+          reject(err);
+      } else {
+          resolve();
+      }
+    });
+  });
+};
+
+function s3GetSignedUrlP(s3params) {
+  console.log("In s3getsignedurlp");
+  return new Promise(function(resolve, reject) {
+    
+    s3.getSignedUrl('putObject', s3params, (err, response) => {
+      if (err) reject(err);
+      const rv = {
+        signedRequest: response,
+        url: `${s3params.Bucket}.s3.amazonaws.com/${s3params.Key}`
+      };
+      resolve(rv);
+    });
+  })
+};
+
+function s3UploadFileP(s3params) {
+  return new Promise(function(resolve, reject) {
+    s3.upload(s3params, (err, response) => {
+      if (err) reject(err);
+      const rv = response;
+      resolve(rv);
+    });
+  });
+};
+
+function readFileP(filePath) {
+  return new Promise(function(resolve, reject) {
+    fs.readFile(filePath, "utf8", (err, data) => {
+      if (err) reject(err);
+      resolve(data);
+    });
+  });
+}
+
+function writeFileP(filePath, data) {
+  return new Promise(function(resolve, reject) {
+    fs.writeFile(filePath, data, 'utf8', (err) => {
+      if (err) reject(err);
+      resolve();
+    });
+  });
+}
+
+// Helper functions
 
 async function fetchGitRepo(gitUri, gitRefSpec) {
   try {
@@ -70,6 +132,48 @@ async function fetchGitRepo(gitUri, gitRefSpec) {
   }
 }
 
+async function makeBundle(repoPath, bundlePath) {
+  const templates = ['/hello.txt'];
+  const templateData = {
+    'name': "HotPlate"
+  };
+
+  templates.forEach(async (t) => {
+    const templatePath = `${repoPath}${t}`;
+    const templateSrc = await readFileP(templatePath);
+    const rendered = dot.template(templateSrc)(templateData);
+    writeFileP(templatePath, rendered);
+  });
+  
+  try {
+    await compressBundleP(repoPath, bundlePath);
+    return true;
+  } catch(err) {
+    console.log(err);
+    return false;
+  }
+}
+
+async function uploadToS3(filePath, fileType) {
+  const s3bucketName = process.env.S3_BUCKET;
+  const fileName = path.basename(filePath);
+  const s3bucketUrl = `${s3bucketName}.s3.amazonaws.com/${fileName}`;
+  const fileData = fs.createReadStream(filePath);
+
+  const s3params = {
+    Bucket: s3bucketName,
+    Key: fileName,
+    Expires: 60,
+    ContentType: fileType,
+    ACL: 'public-read',
+    Body: fileData
+  };
+
+  const result = await s3UploadFileP(s3params);
+
+  return result;
+}
+
 router.get("/", function (req, res) {
   Project.find().then((projectData, err) => {
     res.json(projectData);
@@ -78,10 +182,19 @@ router.get("/", function (req, res) {
 
 router.get("/:id", function (req, res) {
   Project.findOne({ '_id': req.params.id }).then(async (projectData, err) => {
+    let bundleUrl = null;
     if (req.query.render === "true") {
-      console.log("Rendering artifacts.");
       const { workPath, cleanupCallback } = await fetchGitRepo(projectData.gitUri, projectData.gitRefSpec);
+      const repoPath = `${workPath}/repo`;
+      const bundlePath = `${workPath}/${req.params.id}.tgz`;
+      const bundleResult = await makeBundle(repoPath, bundlePath);
+      const uploadResult = await uploadToS3(bundlePath, 'application/x-gzip');
+      bundleUrl = uploadResult.Location;
     }
+    console.log(bundleUrl);
+    projectData = projectData.toObject();
+    projectData["downloadUrl"] = bundleUrl;
+    console.log(JSON.stringify(projectData));
     res.json(projectData);
   });
 });
