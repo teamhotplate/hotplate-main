@@ -33,7 +33,7 @@ const projectSchema = new mongoose.Schema({
       trim: true,
       required: true
     },
-    gitRefSpec: {
+    gitBranch: {
       type: String,
       trim: true,
       required: true,
