@@ -10,7 +10,7 @@ class About extends Component {
       <Container>
         <Row>
           <Col s={12}>
-            <Card className="blue lighten-1" header={<CardTitle image={aboutImg}>Hotplate</CardTitle>}>
+            <Card className="red darken-4" header={<CardTitle image={aboutImg}>Hotplate</CardTitle>}>
               <span>Hotplate will forever change the landscape of template generation.</span>
             </Card>
           </Col>
