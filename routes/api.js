@@ -8,7 +8,9 @@ router.get("/unprotected", function (req, res) {
   res.json({"message": "Hello from the /api/unprotected GET endpoint"});
 });
 
-router.get("/protected", passport.authenticate('jwt', { session: false }), function (req, res) {
+router.get("/protected", passport.authenticate('jwt-cookiecombo', {
+  session: false
+}), function (req, res) {
   res.json({"message": "Hello from the /api/protected GET endpoint"});
 });
 
