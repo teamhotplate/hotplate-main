@@ -1,11 +1,11 @@
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 import express from 'express';
 import passport from 'passport';
 import path from 'path';
 
 import {} from 'dotenv/config';
 
-import config from './config';
 import router from './routes';
 
 // Initialize Express
@@ -14,6 +14,7 @@ const app = express();
 // Enable Middleware
 app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(bodyParser.json());
+app.use(cookieParser(process.env.JWTSECRET));
 app.use(passport.initialize());
 
 // Load routes

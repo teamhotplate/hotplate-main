@@ -1,32 +1,34 @@
 import jwt from 'jsonwebtoken';
 import passport from 'passport';
-import passportJWT from 'passport-jwt';
+import passportJwtCookieCombo from 'passport-jwt-cookiecombo';
 import { User } from '../models';
 
-const ExtractJwt = passportJWT.ExtractJwt;
-const JwtStrategy = passportJWT.Strategy;
+// Auth Configuration
+const authConfig = {
+  secret: process.env.JWTSECRET,
+  options: {
+      //audience: 'https://gp3hotplate.herokuapp.com',
+      //issuer: 'gp3hotplate.herokuapp.com',
+      expiresIn: '12h' // 1d 
+  },
+  cookie: {
+      httpOnly: true,
+      sameSite: true,
+      signed: true,
+      secure: false
+  }
+}
 
-const jwtOptions = {}
-jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
-jwtOptions.secretOrKey = process.env.JWTSECRET;
+// Enable JWT Cookie+Bearer Combo Strategy
+passport.use(new passportJwtCookieCombo({
+  secretOrPublicKey: authConfig.secret
+}, (payload, done) => {
+  return done(null, payload.user);
+}));
 
-const jwtStrategy = new JwtStrategy(jwtOptions, (jwt_payload, next) => {
-  console.log('payload received', jwt_payload);
-  // TO DO (Adrian)
-  User.findOne({ _id: jwt_payload.user_id }).then((userData, err) => {
-    console.log(userData);
-    if (!userData) {
-      console.log("In invalid creds handler. User was null.");
-      return next(null, false, { message: 'Invalid user credentials.' });
-    } else {
-      console.log("In jwt success handler. User was not null.");
-      return next(null, userData);
-    }
-  }).catch((err) => {
-    return next(null, false, { message: 'Unknown error validating user token.' });
-  });
-});
+// Enable Local+Mongoose strategy for intitial authentication and token generation
+passport.use(User.createStrategy());
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-passport.use(jwtStrategy);
-
-export default {}
+export default authConfig;
