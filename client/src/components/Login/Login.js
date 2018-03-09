@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-materialize';
+import { Redirect } from 'react-router-dom';
 
 import './Login.css';
 
@@ -23,10 +24,17 @@ class Login extends Component {
   handleFormSubmit = (event) => {
     event.preventDefault();
     const { username, password } = this.state;
+    this.setState({
+      username: "",
+      password: ""
+    });
     this.props.loginHandler(username, password);
   }
 
   render() {
+    if (this.props.userToken) {
+      return <Redirect to="/" />
+    }
     return (
       <Container>
         <form onSubmit={this.handleFormSubmit}>
