@@ -20,7 +20,14 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-// Promise wrapper functions
+
+//  *****************************
+//  * Promise wrapper functions *
+//  *****************************
+
+
+/*  Create a temporary working directory. Return the path of the new directory and 
+ a callback that we call when done with the temp dir, to clean it up. */
 
 function mkTempDirP() {
   return new Promise(function(resolve, reject) { 
@@ -34,6 +41,10 @@ function mkTempDirP() {
     });
   });
 }
+
+
+/* Given a base path, and an output file path, create a tgz archive
+ from the contents of the base path. */
 
 function compressBundleP(basePath, bundlePath) {
   return new Promise(function(resolve, reject) {
@@ -50,10 +61,14 @@ function compressBundleP(basePath, bundlePath) {
   });
 };
 
+
+/*  Given an s3params dict (and our logged-in aws access id and secret)
+ request pre-signing of a PUT request. The pre-signed request can be returned
+ to a client, so the client can make S3 calls that require authentication,
+ without having to share access creds with the client. */
+
 function s3GetSignedUrlP(s3params) {
-  console.log("In s3getsignedurlp");
   return new Promise(function(resolve, reject) {
-    
     s3.getSignedUrl('putObject', s3params, (err, response) => {
       if (err) reject(err);
       const rv = {
@@ -65,6 +80,11 @@ function s3GetSignedUrlP(s3params) {
   })
 };
 
+
+/* Given an s3params dict (and our logged-in aws access id and secret)
+ upload an object to S3. The data to be uploaded is specified in
+ the Body key of the s3params dict. */
+
 function s3UploadFileP(s3params) {
   return new Promise(function(resolve, reject) {
     s3.upload(s3params, (err, response) => {
@@ -75,6 +95,9 @@ function s3UploadFileP(s3params) {
   });
 };
 
+
+/*  Given a file path, read the file and return its contents. */
+
 function readFileP(filePath) {
   return new Promise(function(resolve, reject) {
     fs.readFile(filePath, "utf8", (err, data) => {
@@ -83,6 +106,10 @@ function readFileP(filePath) {
     });
   });
 }
+
+
+/* Given a file path and data, write the data to a file at
+ the specifed path. */
 
 function writeFileP(filePath, data) {
   return new Promise(function(resolve, reject) {
@@ -93,9 +120,17 @@ function writeFileP(filePath, data) {
   });
 }
 
-// Helper functions
 
-async function fetchGitRepo(gitUri, gitRefSpec) {
+//  ********************
+//  * Helper functions *
+//  ********************
+
+
+/* Given a GIT repository URI and branch (or tag) name
+create a temporary directory, and fetch the specified tag/branch
+into the /repo subdirectory of the temp directory. */
+
+async function fetchGitRepo(gitUri, gitBranch) {
   try {
 
     // Create a temporary work directory
@@ -118,11 +153,11 @@ async function fetchGitRepo(gitUri, gitRefSpec) {
 
     // Fetch 
     console.log("Fetching");
-    await repo.fetch('origin', gitRefSpec);
+    await repo.fetch('origin', gitBranch);
 
     // Checkout the branch
     console.log("Checking out branch");
-    await repo.checkout(['--track', `origin/${gitRefSpec}`]);
+    await repo.checkout(['--track', `origin/${gitBranch}`]);
 
     return { workPath, cleanupCallback };
 
@@ -132,16 +167,15 @@ async function fetchGitRepo(gitUri, gitRefSpec) {
   }
 }
 
-async function makeBundle(repoPath, bundlePath) {
-  const templates = ['/hello.txt'];
-  const templateData = {
-    'name': "HotPlate"
-  };
+/* Perform template variable substitution on a specified subset of files in
+   repoPath. Once done, roll repoPath up into a tgz archive. */
 
-  templates.forEach(async (t) => {
+async function makeBundle(repoPath, bundlePath, templateList, templateParams) {
+
+  templateList.forEach(async (t) => {
     const templatePath = `${repoPath}${t}`;
     const templateSrc = await readFileP(templatePath);
-    const rendered = dot.template(templateSrc)(templateData);
+    const rendered = dot.template(templateSrc)(templateParams);
     writeFileP(templatePath, rendered);
   });
   
@@ -153,6 +187,8 @@ async function makeBundle(repoPath, bundlePath) {
     return false;
   }
 }
+
+/* Upload a specified file to S3. */
 
 async function uploadToS3(filePath, fileType) {
   const s3bucketName = process.env.S3_BUCKET;
@@ -174,20 +210,41 @@ async function uploadToS3(filePath, fileType) {
   return result;
 }
 
-router.get("/", function (req, res) {
+/* Read a hotplate.json file in, parse and return the contained object.. */
+
+async function readHotplateJson(filePath) {
+  console.log("Opening hotplate.json...");
+  const hotplateJson = await readFileP(filePath);
+  const hotplateData = JSON.parse(hotplateJson);
+  return hotplateData;
+}
+
+/* Get all projects */
+
+router.get("/", (req, res) => {
   Project.find().then((projectData, err) => {
     res.json(projectData);
   });
 });
 
-router.get("/:id", function (req, res) {
+/* Get a specific project */
+
+router.get("/:id", (req, res) => {
   Project.findOne({ '_id': req.params.id }).then(async (projectData, err) => {
     let bundleUrl = null;
     if (req.query.render === "true") {
-      const { workPath, cleanupCallback } = await fetchGitRepo(projectData.gitUri, projectData.gitRefSpec);
+      const { workPath, cleanupCallback } = await fetchGitRepo(projectData.gitUri, projectData.gitBranch);
       const repoPath = `${workPath}/repo`;
       const bundlePath = `${workPath}/${req.params.id}.tgz`;
-      const bundleResult = await makeBundle(repoPath, bundlePath);
+
+      // Temporarily hardwired template list and params -- update to get template list from project model
+      // and template Data from req.params
+      const templates = ['/hello.txt'];
+      const templateData = {
+        'name': "HotPlate"
+      };
+
+      const bundleResult = await makeBundle(repoPath, bundlePath, templates, templateData);
       const uploadResult = await uploadToS3(bundlePath, 'application/x-gzip');
       bundleUrl = uploadResult.Location;
     }
@@ -199,72 +256,44 @@ router.get("/:id", function (req, res) {
   });
 });
 
-// This works, but is grotesque.. Convert this mess to async/await and break it up into small functions
-router.post("/", (req, res) => {
+/* Create a project, provided a GIT URI and branch or tag name. Fetch specified branch
+   and extract required project details from contained hotplate.json file. */
+
+router.post("/", async (req, res) => {
+
   // Create a Project with the data available to us in req.body
   console.log(req.body);
   const newProjectObj = {
+    // Temporarily take the project name from the post body to make it easier to create
+    // multiple projects from the same repo during development. Normally will get it from
+    // the hotplate.json taken from the repo.
     name: req.body.name,
     gitUri: req.body.gitUri,
-    gitRefSpec: req.body.gitRefSpec
+    gitBranch: req.body.gitBranch
   };
-  // Re-order logic so that existing Project check happens after retrieval of project from Git repo
-  // That way, the name attribute can be taken from the hotplate.json
-  Project.findOne({ name: newProjectObj.name }).then((existingDbProject, err) => {
-    console.log(`In Project.findOne. newProjectObj: ${JSON.stringify(newProjectObj)}. err: ${JSON.stringify(err)}. existingDbProject: ${JSON.stringify(existingDbProject)}`)
-    if (existingDbProject) {
-      res.status(409).json({ error: "PROJECT_EXISTS"});
-    } else {
+  
+  const { workPath, cleanupCallback } = await fetchGitRepo(newProjectObj.gitUri, newProjectObj.gitBranch);
+  const repoPath = `${workPath}/repo`;
+  const hotplateJsonPath = `${repoPath}/hotplate.json`;
+  const hotplateData = await readHotplateJson(hotplateJsonPath);
+  console.log(`Hotplate data read from repo: ${JSON.stringify(hotplateData)}`);
 
-      // Create temp work directory
-      tmp.dir((err, workPath, cleanupCallback) => {
-        if (err) throw err;
-        // Retrieve git repo
-        const repoPath = workPath + '/repo';
-        fs.mkdirSync(repoPath);
-        const repo = git(repoPath);
-        repo.init()
-          .then(() => {
-            console.log("Adding git remote...");
-            return repo.addRemote('origin', newProjectObj.gitUri)
-          })
-          .then(() => {
-            // Add handling for fetch failures
-            console.log("Fetching from git...");
-            return repo.fetch('origin', newProjectObj.gitRefSpec);
-          })
-          .then(() => {
-            console.log("Checking out git ref...");
-            return repo.checkout(['--track', `origin/${newProjectObj.gitRefSpec}`]);
-          })
-          .then(() => {
-            // Add logic here to return a sane http failure response on failure instead of crash
-            console.log("Opening hotplate.json...");
-            const hotplateJsonPath = `${repoPath}/hotplate.json`;
-            //console.log(hotplateJsonPath);
-            const hotplateJson = fs.readFileSync(hotplateJsonPath, { encoding: 'utf8' });
-            //console.log(hotplateJson);
-            const hotplateData = JSON.parse(hotplateJson);
-            return hotplateData;
-          })
-          .then((hotplateData) => {
-            // Read project attributes from hotplate.json
-            // Add attribs to newProjectObj
-            console.log(`Hotplate data read from repo: ${JSON.stringify(hotplateData)}`);
-            //newProjectObj["name"] = hotplateData.name;
-            newProjectObj["description"] = hotplateData.description;
-            newProjectObj["params"] = hotplateData.params;
-            // Add Project to db
-            console.log("Making the project.");
-            Project.create(newProjectObj).then((err, newDbProject) => {
-              res.status(200).json(newProjectObj);
-            });
-          });
-        // Manual cleanup 
-        //cleanupCallback();
-      });  
-    }
-  });
+  // Temporarily take the project name from the post body to make it easier to create
+  // multiple projects from the same repo during development
+  //newProjectObj["name"] = hotplateData.name;
+
+  newProjectObj["description"] = hotplateData.description;
+  newProjectObj["params"] = hotplateData.params;
+  const existingDbProject = await Project.findOne({ name: newProjectObj.name });
+  if (existingDbProject) {
+    res.status(409).json({ error: "PROJECT_EXISTS"});
+  } else {
+    console.log("Making the project.");
+    const newDbProject = await Project.create(newProjectObj);
+    res.status(200).json(newDbProject);
+    // Manual cleanup 
+    //cleanupCallback();
+  }
 });
 
 // router.get("/unprotected", function (req, res) {
