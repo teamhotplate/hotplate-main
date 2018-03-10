@@ -18,7 +18,7 @@ class Header extends Component {
         <li><NavLink to="/about" className="black-text">About</NavLink></li>
         { this.props.userToken ?
           <li><NavLink to="/" onClick={this.handleLogout} className="black-text">Log Out</NavLink></li> :
-          <li><NavLink to="login" className="black-text">Log In</NavLink></li> }     
+          <li><NavLink to="/login" className="black-text">Log In</NavLink></li> }     
       </Navbar>
     );
   }
