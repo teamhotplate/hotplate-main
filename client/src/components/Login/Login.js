@@ -47,7 +47,6 @@ class Login extends Component {
                     name="username"
                     type="text"
                     className="validate"
-                    placeholder="Username"
                     value={this.state.username}
                     onChange={this.handleFormChange}
                   />
@@ -59,7 +58,6 @@ class Login extends Component {
                     name="password"
                     type="password"
                     className="validate"
-                    placeholder="Password"
                     value={this.state.password}
                     onChange={this.handleFormChange}
                   />
