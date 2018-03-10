@@ -26,7 +26,7 @@ class ParamsForm extends Component {
 
   render() {
     return (
-      
+      //What is rendered here?
     );
   }
 }
