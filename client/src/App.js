@@ -7,6 +7,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import About from './components/About';
 import Header from './components/Header';
 import Login from './components/Login';
+import Project from './components/Project';
 
 import './App.css';
 
@@ -44,6 +45,7 @@ class App extends Component {
             <Header userToken={this.state.userToken} handleLogout={this.handleLogout}/>
             <Route exact path="/" render={props => <About userToken={this.state.userToken} {...props}/>} />
             <Route exact path="/login" render={props => <Login loginHandler={this.handleLogin} userToken={this.state.userToken} {...props} />} />
+            <Route exact path="/project" render={props => <Project userToken={this.state.userToken} {...props}/>} />
           </div>
         </Router>
       </div>
