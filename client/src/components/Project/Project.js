@@ -148,14 +148,27 @@ class Project extends Component {
             <Row>
               <Col s={12} className="input-field">
                 <input 
-                  id="primarycolor"
-                  name="primarycolor"
+                  id="name"
+                  name="name"
                   type="text"
                   className="validate"
-                  value={this.getParamValue("primarycolor")}
+                  value={this.getParamValue("name")}
                   onChange={this.handleParamUpdate}
                 />
-                <label htmlFor="primarycolor">Primary Color (HTML Color Code)</label>
+                <label htmlFor="name">Your name</label>
+              </Col>
+            </Row>
+            <Row>
+              <Col s={12} className="input-field">
+                <input 
+                  id="color"
+                  name="color"
+                  type="text"
+                  className="validate"
+                  value={this.getParamValue("color")}
+                  onChange={this.handleParamUpdate}
+                />
+                <label htmlFor="color">Your favorite color (HTML code)</label>
               </Col>
             </Row>
             <Row>

@@ -259,9 +259,13 @@ router.get("/:id", (req, res) => {
 
       // Temporarily hardwired template list and params -- update to get template list from project model
       // and template Data from req.params
-      const templates = ['/hello.txt'];
+      const templates = [
+        "/myProject/hello.html",
+        "/myProject/css/style.css"
+      ];
       const templateData = {
-        'name': "HotPlate"
+        'name': "HotPlate",
+        'color': "#aaaaaa"
       };
 
       const bundleResult = await makeBundle(repoPath, bundlePath, templates, templateData);
