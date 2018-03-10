@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-materialize';
 import { Redirect } from 'react-router-dom';
-
 import './Login.css';
 
 class Login extends Component {
