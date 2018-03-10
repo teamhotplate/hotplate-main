@@ -49,6 +49,8 @@ const projectSchema = new mongoose.Schema({
     }
   });
 
+projectSchema.index({ name: 'text', description: 'text' });
+
 // Create a Project Model from the above-defined Schema
 const ProjectModel = mongoose.model("Project", projectSchema);
 

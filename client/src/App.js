@@ -8,6 +8,8 @@ import About from './components/About';
 import Header from './components/Header';
 import Login from './components/Login';
 import Project from './components/Project';
+import SearchPage from './components/SearchPage';
+
 
 import './App.css';
 
@@ -43,9 +45,10 @@ class App extends Component {
         <Router>
           <div>
             <Header userToken={this.state.userToken} handleLogout={this.handleLogout}/>
-            <Route exact path="/" render={props => <About userToken={this.state.userToken} {...props}/>} />
+            <Route exact path="/" render={props => <SearchPage {...props}/>} />
+            <Route exact path="/about" render={props => <About {...props}/>} />
             <Route exact path="/login" render={props => <Login loginHandler={this.handleLogin} userToken={this.state.userToken} {...props} />} />
-            <Route exact path="/project" render={props => <Project userToken={this.state.userToken} {...props}/>} />
+            <Route path="/p/:projectName" component={Project} />
           </div>
         </Router>
       </div>

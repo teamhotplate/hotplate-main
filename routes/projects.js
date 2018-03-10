@@ -221,10 +221,30 @@ async function readHotplateJson(filePath) {
 
 /* Get all projects */
 
-router.get("/", (req, res) => {
-  Project.find().then((projectData, err) => {
-    res.json(projectData);
-  });
+router.get("/", async (req, res) => {
+  let projectData = [];
+  if (req.query.n) {
+    try {
+      projectData = await Project.findOne({ name: req.query.n });
+      res.json(projectData);
+    } catch(error) {
+      console.error(error);
+    }
+  } else if (req.query.s) {
+    try {
+      projectData = await Project.find({ $text: { $search: req.query.s } });
+      res.json(projectData);
+    } catch(error) {
+      console.error(error);
+    }
+  } else {
+    try {
+      projectData = await Project.find({});
+      res.json(projectData);
+    } catch(error) {
+      console.error(error);
+    }
+  }
 });
 
 /* Get a specific project */
@@ -239,9 +259,13 @@ router.get("/:id", (req, res) => {
 
       // Temporarily hardwired template list and params -- update to get template list from project model
       // and template Data from req.params
-      const templates = ['/hello.txt'];
+      const templates = [
+        "/myProject/hello.html",
+        "/myProject/css/style.css"
+      ];
       const templateData = {
-        'name': "HotPlate"
+        'name': "HotPlate",
+        'color': "#aaaaaa"
       };
 
       const bundleResult = await makeBundle(repoPath, bundlePath, templates, templateData);
