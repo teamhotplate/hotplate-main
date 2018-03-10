@@ -3,3 +3,11 @@
   padding-right: 10px;
 }
 
+img.logo {
+  padding: 5px;
+  height:64px;
+}
+
+.nav-text {
+  color: black;
+}
