@@ -2,8 +2,8 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-materialize';
 
-import SearchForm from './SearchForm';
-import SearchResults from './SearchResults';
+import SearchForm from '../SearchForm';
+import SearchResults from '../SearchResults';
 import './SearchPage.css';
 
 class SearchPage extends Component {
