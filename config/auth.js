@@ -6,12 +6,12 @@ import { User } from '../models';
 // Auth Configuration
 const authConfig = {
   secret: process.env.JWTSECRET,
-  options: {
+  jwtOptions: {
       //audience: 'https://gp3hotplate.herokuapp.com',
       //issuer: 'gp3hotplate.herokuapp.com',
-      expiresIn: '12h' // 1d 
+      expiresIn: '12h'
   },
-  cookie: {
+  cookieOptions: {
       httpOnly: true,
       sameSite: true,
       signed: true,
@@ -21,7 +21,8 @@ const authConfig = {
 
 // Enable JWT Cookie+Bearer Combo Strategy
 passport.use(new passportJwtCookieCombo({
-  secretOrPublicKey: authConfig.secret
+  secretOrPublicKey: authConfig.secret,
+  jwtCookieSecure: false
 }, (payload, done) => {
   return done(null, payload.user);
 }));

@@ -26,14 +26,24 @@ router.post('/login', passport.authenticate('local'), (req, res) => {
   jwt.sign({ user: req.user }, authConfig.secret, (err, token) => {
     
     if (err) return res.json(err);
-    // Send Set-Cookie header. More secure than local-storage for browser clients.
-    res.cookie('jwt', token, authConfig.cookie);
 
-    // Return json web token. For use by non-browser clients.
+    // Browser will store jwt as http-only cookie, which is safer than keeping
+    // the full token in local-storage, where it'd be accessible by javascript.
+    res.cookie('jwt', token, authConfig.cookieOptions);
+
+    // Return json web token in the json response body. For use by non-browser clients.
+    // Browser clients will extract a couple key details (userId, userName) from the
+    // jwt retrieved from the body, and discard it, using the http-only cookie (see above)
+    // for authentication, instead.
     return res.json({
       jwt: token
     });
   });
+});
+
+router.post('/logout', (req, res) => {
+  res.clearCookie('jwt', authConfig.cookieOptions);
+  return res.end();
 });
 
 export default router;

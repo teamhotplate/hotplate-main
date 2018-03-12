@@ -3,6 +3,7 @@ import aws from 'aws-sdk';
 import dot from 'dot';
 import fs, { write } from 'fs';
 import git from 'simple-git/promise';
+import passport from 'passport';
 import path from 'path';
 import targz from 'targz';
 import tmp from 'tmp';
@@ -220,8 +221,8 @@ async function readHotplateJson(filePath) {
 }
 
 /* Get all projects */
-
 router.get("/", async (req, res) => {
+  console.log(`In projects get route. Cookies: ${JSON.stringify(req.cookies)} SignedCookies: ${JSON.stringify(req.signedCookies)}`);
   let projectData = [];
   if (req.query.n) {
     try {
@@ -283,7 +284,9 @@ router.get("/:id", (req, res) => {
 /* Create a project, provided a GIT URI and branch or tag name. Fetch specified branch
    and extract required project details from contained hotplate.json file. */
 
-router.post("/", async (req, res) => {
+router.post("/",  passport.authenticate('jwt-cookiecombo', {
+    session: false
+  }), async (req, res) => {
 
   // Create a Project with the data available to us in req.body
   console.log(req.body);
