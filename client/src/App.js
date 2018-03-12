@@ -48,6 +48,7 @@ class App extends Component {
     await axios.post('/auth/logout', {});
     localStorage.removeItem("user");
     this.setState({ user: null });
+    window.location = "/";
   }
 
   render() {

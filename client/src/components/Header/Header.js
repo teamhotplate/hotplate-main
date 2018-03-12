@@ -10,7 +10,6 @@ class Header extends Component {
   handleLogout = (event) => {
     event.preventDefault();
     this.props.handleLogout();
-    window.location = "/";
   }
   render() {
     return (
