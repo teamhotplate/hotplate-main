@@ -1,3 +1,11 @@
 .search-form {
   padding: 24px;
 }
+
+#search-query{
+  background-color: #fae2ff;
+}
+
+#search-button{
+  background-color: #c02429;
+}
