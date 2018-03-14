@@ -34,19 +34,19 @@ class SearchForm extends Component {
               <Row>
                 <Col s={12} className="input-field">
                   <input 
-                    id="searchQuery"
+                    id="search-query"
                     name="searchQuery"
                     type="text"
                     className="validate"
                     value={this.state.searchQuery}
                     onChange={this.handleFormChange}
                   />
-                  <label htmlFor="searchQuery">Search</label>
+                  <label htmlFor="searchQuery white-text">Search</label>
                 </Col>
               </Row>
               <Row>
                 <Col s={12}>
-                  <button className="btn-small waves-effect waves-light red darken-4" type="submit" name="action">Search
+                  <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
                     <i className="material-icons right" />
                   </button>
                 </Col>
