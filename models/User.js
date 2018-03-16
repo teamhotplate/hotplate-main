@@ -6,7 +6,9 @@ const userSchema = new mongoose.Schema({
     userCreated: {
       type: Date,
       default: Date.now
-    }
+    },
+    projects : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    bundles : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
   });
 
 // Enable the passport-local-mongoose plugin on the User Schema

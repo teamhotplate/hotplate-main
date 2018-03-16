@@ -10,7 +10,7 @@ import tmp from 'tmp';
 
 import { Router } from 'express';
 
-import { Project } from '../models';
+import { Bundle, Project } from '../models';
 
 const router = Router();
 
@@ -171,7 +171,13 @@ async function fetchGitRepo(gitUri, gitBranch) {
 /* Perform template variable substitution on a specified subset of files in
    repoPath. Once done, roll repoPath up into a tgz archive. */
 
-async function makeBundle(repoPath, bundlePath, templateList, templateParams) {
+async function makeBundle(repoPath, bundlePath, templateList, templateInputList) {
+  
+  let templateParams = {};
+  templateParams = templateInputList.reduce((obj, templateInput) => {
+    obj[templateInput.inputName] = templateInput.inputValue;
+    return obj;
+  }, templateParams);
 
   templateList.forEach(async (t) => {
     const templatePath = `${repoPath}${t}`;
@@ -220,63 +226,64 @@ async function readHotplateJson(filePath) {
   return hotplateData;
 }
 
-/* Get all projects */
+/* Get all bundles */
 router.get("/", async (req, res) => {
-  console.log(`In projects get route. Cookies: ${JSON.stringify(req.cookies)} SignedCookies: ${JSON.stringify(req.signedCookies)}`);
-  let projectData = [];
-  if (req.query.n) {
-    try {
-      projectData = await Project.findOne({ name: req.query.n });
-      res.json(projectData);
-    } catch(error) {
-      console.error(error);
-    }
-  } else if (req.query.s) {
-    try {
-      projectData = await Project.find({ $text: { $search: req.query.s } });
-      res.json(projectData);
-    } catch(error) {
-      console.error(error);
-    }
-  } else {
-    try {
-      projectData = await Project.find({});
-      res.json(projectData);
-    } catch(error) {
-      console.error(error);
-    }
+  console.log(`In bundles get-all route.`);
+  let bundleData = [];
+  try {
+    bundleData = await Bundle.find({});
+    res.json(bundleData);
+  } catch(error) {
+    console.error(error);
   }
 });
 
-/* Get a specific project */
-
-router.get("/:id", (req, res) => {
-  Project.findOne({ '_id': req.params.id }).populate('owner', 'username').then(async (projectData, err) => {
-
-    console.log(JSON.stringify(projectData));
-    res.json(projectData);
-  });
+/* Get specific bundle */
+router.get("/:id", async (req, res) => {
+  console.log(`In bundles get-by-id route.`);
+  let bundleData = [];
+  try {
+    bundleData = await Bundle.findOne({_id: req.params.id}).populate('owner', 'username').populate('project', 'name gitUri gitBranch');
+    res.json(bundleData);
+  } catch(error) {
+    console.error(error);
+  }
 });
 
-/* Create a project, provided a GIT URI and branch or tag name. Fetch specified branch
-   and extract required project details from contained hotplate.json file. */
+/* Create a bundle */
+router.post("/", passport.authenticate('jwt-cookiecombo', {
+  session: false
+}), async (req, res) => {
+  const newBundleObj = req.body;
+  let newBundleDb = null;
 
-router.post("/",  passport.authenticate('jwt-cookiecombo', {
-    session: false
-  }), async (req, res) => {
-
-  // Create a Project with the data available to us in req.body
-  console.log(req.body);
-  const newProjectObj = req.body;
-  
-  const existingDbProject = await Project.findOne({ name: newProjectObj.name });
-  if (existingDbProject) {
-    res.status(409).json({ error: "PROJECT_EXISTS"});
-  } else {
-    console.log("Making the project.");
-    const newDbProject = await Project.create(newProjectObj);
-    res.status(200).json(newDbProject);
+  try {
+    newBundleDb = await Bundle.create(newBundleObj);
+    newBundleDb = await Bundle.findOne({_id: newBundleDb._id})
+      .populate('owner', 'username')
+      .populate('project', 'name gitUri gitBranch templates');
+  } catch(error) {
+    console.error(error);
   }
+
+  let bundleUrl = null;
+  if (true) {
+    const { workPath, cleanupCallback } = await fetchGitRepo(newBundleDb.project.gitUri, newBundleDb.project.gitBranch);
+    const repoPath = `${workPath}/repo`;
+    const bundlePath = `${workPath}/${newBundleDb._id}.tgz`;
+    console.log(repoPath);
+    const bundleResult = await makeBundle(repoPath, bundlePath, newBundleDb.project.templates, newBundleDb.inputs);
+    const uploadResult = await uploadToS3(bundlePath, 'application/x-gzip');
+    bundleUrl = uploadResult.Location;
+    // Clean up temp directory
+    // cleanupCallback();
+  }
+
+  console.log(bundleUrl);
+  const bundleData = newBundleDb.toObject();
+  bundleData["downloadUrl"] = bundleUrl;
+  console.log(JSON.stringify(newBundleDb));
+  res.json(bundleData);
 });
 
 export default router;

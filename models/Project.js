@@ -1,5 +1,4 @@
 import mongoose from 'mongoose';
-// import passportLocalMongoose from 'passport-local-mongoose';
 
 // Define a Param Schema
 const paramSchema = new mongoose.Schema({
@@ -28,6 +27,16 @@ const projectSchema = new mongoose.Schema({
       trim: true,
       required: true
     },
+    owner : {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'User',
+      required: true
+    },
+    description: {
+      type: String,
+      trim: true,
+      required: true
+    },
     gitUri: {
       type: String,
       trim: true,
@@ -39,14 +48,14 @@ const projectSchema = new mongoose.Schema({
       required: true,
       default: "master"
     },
-    description: {
-      type: String,
-      trim: true,
-      required: true
+    templates: {
+      type: [ String ],
+      trim: true   
     },
     params: {
       type: [paramSchema]
-    }
+    },
+    bundles : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
   });
 
 projectSchema.index({ name: 'text', description: 'text' });
