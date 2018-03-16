@@ -14,7 +14,7 @@ class Header extends Component {
   render() {
     return (
       <Navbar className="Header header" brand={Img} right>
-        { this.props.user ? <li><NavLink to="/newproject">Create</NavLink></li> : "" }
+        { this.props.user ? <li><NavLink to="/create">Create</NavLink></li> : "" }
         <li><NavLink to="/">Search</NavLink></li>
         <li><NavLink to="/about">About</NavLink></li>
         { this.props.user ?

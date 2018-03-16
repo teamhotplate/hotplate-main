@@ -62,7 +62,7 @@ class App extends Component {
             <Route exact path="/" render={props => <SearchPage {...props}/>} />
             <Route exact path="/about" render={props => <About {...props}/>} />
             <Route exact path="/login" render={props => <Login loginHandler={this.handleLogin} user={this.state.user} {...props} />} />
-            <Route exact path="/newproject" render={props => <CreateProjectPage user={this.state.user} {...props} />} />
+            <Route exact path="/create" render={props => <CreateProjectPage user={this.state.user} {...props} />} />
             <Route path="/p/:projectName" render={props => <Project user={this.state.user} {...props} />} />
             <Route exact path="/register" render={props => <Register user={this.state.user} {...props} />} />
           </div>
