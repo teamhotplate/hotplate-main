@@ -9,7 +9,7 @@ const router = Router();
 // User registration and login routes
 
 router.post("/users", (req, res) => {
-  User.register(new User({ username: req.body.username }), req.body.password, function(err) {
+  User.register(new User({ username: req.body.username, email: req.body.email }), req.body.password, function(err) {
     if (err) {
       console.log("Error while registering user: ", err);
       return next();
