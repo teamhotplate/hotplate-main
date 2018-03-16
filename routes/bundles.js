@@ -21,11 +21,9 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
-
 //  *****************************
 //  * Promise wrapper functions *
 //  *****************************
-
 
 /*  Create a temporary working directory. Return the path of the new directory and 
  a callback that we call when done with the temp dir, to clean it up. */
@@ -42,7 +40,6 @@ function mkTempDirP() {
     });
   });
 }
-
 
 /* Given a base path, and an output file path, create a tgz archive
  from the contents of the base path. */
@@ -62,7 +59,6 @@ function compressBundleP(basePath, bundlePath) {
   });
 };
 
-
 /*  Given an s3params dict (and our logged-in aws access id and secret)
  request pre-signing of a PUT request. The pre-signed request can be returned
  to a client, so the client can make S3 calls that require authentication,
@@ -81,7 +77,6 @@ function s3GetSignedUrlP(s3params) {
   })
 };
 
-
 /* Given an s3params dict (and our logged-in aws access id and secret)
  upload an object to S3. The data to be uploaded is specified in
  the Body key of the s3params dict. */
@@ -96,7 +91,6 @@ function s3UploadFileP(s3params) {
   });
 };
 
-
 /*  Given a file path, read the file and return its contents. */
 
 function readFileP(filePath) {
@@ -107,7 +101,6 @@ function readFileP(filePath) {
     });
   });
 }
-
 
 /* Given a file path and data, write the data to a file at
  the specifed path. */
@@ -121,11 +114,9 @@ function writeFileP(filePath, data) {
   });
 }
 
-
 //  ********************
 //  * Helper functions *
 //  ********************
-
 
 /* Given a GIT repository URI and branch (or tag) name
 create a temporary directory, and fetch the specified tag/branch
