@@ -31,11 +31,11 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div className="search-page">
+      <div className="search-page theme">
         <Container>
           <Row>
             <Col s={12}>
-              <SearchForm handleSearch={ this.handleSearch } />
+              <SearchForm handleSearch={ this.handleSearch }/>
             </Col>
           </Row>
           <Row>
