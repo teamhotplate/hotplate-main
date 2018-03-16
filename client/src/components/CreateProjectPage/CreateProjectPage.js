@@ -13,7 +13,7 @@ class CreateProjectPage extends Component {
       gitUri: "",
       gitBranch: "",
       templates: [],
-      projectParams: []
+      params: []
     };
   }
 
@@ -22,63 +22,7 @@ class CreateProjectPage extends Component {
     this.setState({
       [name]: value
     });
-    console.log(`Updated state from form: ${JSON.stringify(this.state)}`);
   }
-
-  // handleFormUpdate = (event) => {
-  //   const { name, value } = event.target;
-  //   const newParams = this.state.projectParams.map((param) => {
-  //     console.log(`Finding param ${name} in list. Current: ${param.name}`);
-  //     if (param.name === name) {
-  //       console.log(`Found param ${name} in list. Updating value to ${value}`);
-  //       param['value'] = value;
-  //     }
-  //     return param;
-  //   });
-  //   console.log(JSON.stringify(newParams));
-  //   this.setState({
-  //     projectParams: newParams
-  //   });
-  //   console.log(`New project state: ${JSON.stringify(this.state)}`);
-  // }
-
-  // getParamValue = (paramName) => {
-  //   console.log(`Getting parameter value for: ${paramName}`);
-  //   const targetParam = this.state.projectParams.filter((param) => {
-  //     console.log(`Finding param in list. Current: ${JSON.stringify(param)}`);
-  //     if (param.name === paramName) {
-  //       console.log(`Found param in list.`);
-  //       return true;
-  //     } else {
-  //       console.log(`Not the right param. Filtering.`);
-  //       return false;
-  //     }
-  //   })[0];
-  //   console.log(`Target param is now: ${JSON.stringify(targetParam)}`);
-  //   const paramValue = targetParam ? targetParam.value : "";
-  //   return paramValue;
-  // }
-
-  // handleFormSubmit = (event) => {
-  //   event.preventDefault();
-  //   // this.getBundle();
-  // }
-
-  // getBundle = async () => {
-  //   const makeBundleUrl = `/api/projects/${this.state.id}?render=true`;
-  //   console.log(`Getting bundle. URL: ${makeBundleUrl}`);
-  //   try {
-  //     const response = await axios.get(makeBundleUrl);
-  //     const downloadUrl = response.data.downloadUrl;
-  //     setTimeout(() => {
-  //       window.open(downloadUrl);
-  //     }, 0);
-  //     console.log(JSON.stringify(response));
-  //   } catch(error) {
-  //     console.error(error);
-  //   }
-  // }
-
 
   handleTemplateChange = (idx) => (event) => {
     const newTemplates = this.state.templates.map((template, templateIdx) => {
@@ -89,9 +33,11 @@ class CreateProjectPage extends Component {
     this.setState({ templates: newTemplates });
   }
 
-  handleSubmit = (event) => {
+  handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(`Form submitted: ${JSON.stringify(this.state)}`);
+    const createProjectUrl = '/api/projects';
+    const response = await axios.post(createProjectUrl, this.state);
+    window.location = `/p/${response.data.name}`;
   }
 
   handleAddTemplate = () => {
@@ -107,9 +53,8 @@ class CreateProjectPage extends Component {
   }
 
   handleProjectParamChange = (idx) => (event) => {
-    const newProjectParams = this.state.projectParams.map((projectParam, projectParamIdx) => {
+    const newParams = this.state.params.map((projectParam, projectParamIdx) => {
       if (idx !== projectParamIdx) return projectParam;
-      console.log(`Updating projectparams. event.target.name: ${JSON.stringify(event.target.name)} event.target.value: ${JSON.stringify(event.target.value)}}`);
       switch (event.target.name) {
         case 'paramName':
           projectParam['name'] = event.target.value;
@@ -123,18 +68,18 @@ class CreateProjectPage extends Component {
       return projectParam;
     });
 
-    this.setState({ projectParams: newProjectParams });
+    this.setState({ params: newParams });
   }
 
   handleAddProjectParam = () => {
     this.setState({
-      projectParams: this.state.projectParams.concat([{ name: '', description: '' }])
+      params: this.state.params.concat([{ name: '', description: '' }])
     });
   }
 
   handleRemoveProjectParam = (idx) => () => {
     this.setState({
-      projectParams: this.state.projectParams.filter((projectParam, projectParamIdx) => idx !== projectParamIdx)
+      params: this.state.params.filter((projectParam, projectParamIdx) => idx !== projectParamIdx)
     });
   }
 
@@ -214,7 +159,7 @@ class CreateProjectPage extends Component {
                     </Col>
                   </Row>
                 {this.state.templates.map((template, idx) => (
-                  <Row>
+                  <Row key={"template-" + idx}>
                     <Col s={9}>
                       <div className="template-input">
                         <input
@@ -244,8 +189,8 @@ class CreateProjectPage extends Component {
                       <h5>Parameters</h5>
                     </Col>
                   </Row>
-                  {this.state.projectParams.map((projectParam, idx) => (
-                  <Row>
+                  {this.state.params.map((projectParam, idx) => (
+                  <Row key={"param-" + idx}>
                     <Col s={9}>
                       <div className="projectparam-input">
                         <input

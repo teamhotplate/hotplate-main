@@ -171,7 +171,7 @@ async function makeBundle(repoPath, bundlePath, templateList, templateInputList)
   }, templateParams);
 
   templateList.forEach(async (t) => {
-    const templatePath = `${repoPath}${t}`;
+    const templatePath = `${repoPath}${t.filePath}`;
     const templateSrc = await readFileP(templatePath);
     const rendered = dot.template(templateSrc)(templateParams);
     writeFileP(templatePath, rendered);
@@ -249,6 +249,7 @@ router.post("/", passport.authenticate('jwt-cookiecombo', {
   let newBundleDb = null;
 
   try {
+    newBundleObj['owner'] = req.user._id;
     newBundleDb = await Bundle.create(newBundleObj);
     newBundleDb = await Bundle.findOne({_id: newBundleDb._id})
       .populate('owner', 'username')

@@ -174,7 +174,7 @@ async function fetchGitRepo(gitUri, gitBranch) {
 async function makeBundle(repoPath, bundlePath, templateList, templateParams) {
 
   templateList.forEach(async (t) => {
-    const templatePath = `${repoPath}${t}`;
+    const templatePath = `${repoPath}${t.filePath}`;
     const templateSrc = await readFileP(templatePath);
     const rendered = dot.template(templateSrc)(templateParams);
     writeFileP(templatePath, rendered);
@@ -267,12 +267,14 @@ router.post("/",  passport.authenticate('jwt-cookiecombo', {
 
   // Create a Project with the data available to us in req.body
   console.log(req.body);
-  const newProjectObj = req.body;
+  let newProjectObj = req.body;
   
   const existingDbProject = await Project.findOne({ name: newProjectObj.name });
   if (existingDbProject) {
     res.status(409).json({ error: "PROJECT_EXISTS"});
   } else {
+    newProjectObj = Object.assign(newProjectObj);
+    newProjectObj['owner'] = req.user._id;
     console.log("Making the project.");
     const newDbProject = await Project.create(newProjectObj);
     res.status(200).json(newDbProject);

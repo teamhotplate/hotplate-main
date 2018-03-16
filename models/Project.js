@@ -20,6 +20,21 @@ const paramSchema = new mongoose.Schema({
   }
 });
 
+// Define a Template Schema
+const templateSchema = new mongoose.Schema({
+  filePath: {
+    type: String,
+    trim: true,
+    required: true
+  },
+  comments: {
+    type: String,
+    trim: true,
+    required: false,
+    default: ""
+  }
+});
+
 // Define a Project Schema
 const projectSchema = new mongoose.Schema({
     name: {
@@ -49,8 +64,7 @@ const projectSchema = new mongoose.Schema({
       default: "master"
     },
     templates: {
-      type: [ String ],
-      trim: true   
+      type: [templateSchema]
     },
     params: {
       type: [paramSchema]

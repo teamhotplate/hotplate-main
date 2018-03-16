@@ -8,98 +8,124 @@ class Project extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      id: "",
       name: "",
       description: "",
       gitUri: "",
       gitBranch: "",
-      projectParams: []
+      templates: [],
+      params: [],
+      status: null
     };
   }
-
   async componentDidMount() {
     const getUrl = `/api/projects?n=${this.props.match.params.projectName}`;
     try {
       const response = await axios.get(getUrl);
       const projectData = response.data;
       console.log(JSON.stringify(projectData));
+
+      const paramsWithValueField = projectData.params.map((param) => {
+        param['value'] = "";
+        return param;
+      });
+
       this.setState({
         id: projectData._id,
         name: projectData.name,
         description: projectData.description,
         gitUri: projectData.gitUri,
         gitBranch: projectData.gitBranch,
-        projectParams: projectData.params
+        params: paramsWithValueField,
+        templates: projectData.templates
       });
+
       console.log(JSON.stringify(this.state));
     } catch(error) {
       console.error(error);
     }
   }
 
-  handleParamUpdate = (event) => {
+  handleFormUpdate = (event) => {
     const { name, value } = event.target;
-    const newParams = this.state.projectParams.map((param) => {
-      console.log(`Finding param ${name} in list. Current: ${param.name}`);
-      if (param.name === name) {
-        console.log(`Found param ${name} in list. Updating value to ${value}`);
-        param['value'] = value;
-      }
-      return param;
-    });
-    console.log(JSON.stringify(newParams));
     this.setState({
-      projectParams: newParams
+      [name]: value
     });
-    console.log(`New project state: ${JSON.stringify(this.state)}`);
+    console.log(`Updated state from form: ${JSON.stringify(this.state)}`);
   }
 
-  getParamValue = (paramName) => {
-    console.log(`Getting parameter value for: ${paramName}`);
-    const targetParam = this.state.projectParams.filter((param) => {
-      console.log(`Finding param in list. Current: ${JSON.stringify(param)}`);
-      if (param.name === paramName) {
-        console.log(`Found param in list.`);
-        return true;
-      } else {
-        console.log(`Not the right param. Filtering.`);
-        return false;
-      }
-    })[0];
-    console.log(`Target param is now: ${JSON.stringify(targetParam)}`);
-    const paramValue = targetParam ? targetParam.value : "";
-    return paramValue;
+  handleTemplateChange = (idx) => (event) => {
+    const newTemplates = this.state.templates.map((template, templateIdx) => {
+      if (idx !== templateIdx) return template;
+      return { ...template, filePath: event.target.value };
+    });
+
+    this.setState({ templates: newTemplates });
   }
 
-  handleFormSubmit = (event) => {
+  handleSubmit = (event) => {
     event.preventDefault();
-    this.getBundle();
+    console.log(`Form submitted: ${JSON.stringify(this.state)}`);
   }
 
-  getBundle = async () => {
-    const makeBundleUrl = `/api/projects/${this.state.id}?render=true`;
-    console.log(`Getting bundle. URL: ${makeBundleUrl}`);
-    try {
-      const response = await axios.get(makeBundleUrl);
-      const downloadUrl = response.data.downloadUrl;
-      setTimeout(() => {
-        window.open(downloadUrl);
-      }, 0);
-      console.log(JSON.stringify(response));
-    } catch(error) {
-      console.error(error);
-    }
+  handleAddTemplate = () => {
+    this.setState({
+      templates: this.state.templates.concat([{ filePath: '' }])
+    });
+  }
+
+  handleRemoveTemplate = (idx) => () => {
+    this.setState({
+      templates: this.state.templates.filter((template, templateIdx) => idx !== templateIdx)
+    });
+  }
+
+  handleProjectParamChange = (idx) => (event) => {
+    const newParams = this.state.params.map((projectParam, projectParamIdx) => {
+      if (idx !== projectParamIdx) return projectParam;
+      return { ...projectParam, value: event.target.value };
+    });
+    this.setState({ params: newParams });
+  }
+
+  handleFormSubmit = async (event) => {
+    event.preventDefault();
+    const bundleData = {};
+    const bundleInputs = this.state.params.map((param) => {
+      return {
+        inputName: param.name,
+        inputValue: param.value,
+        inputType: param.paramType
+      };
+    });
+    bundleData['inputs'] = bundleInputs;
+    bundleData['project'] = this.state.id;
+    console.log(`Submitting bundle request, with bundle data: ${JSON.stringify(bundleData)}`);
+    this.setState({
+      status: "Building bundle.. please stand by.."
+    });
+    const newBundleUrl = '/api/bundles';
+    const response = await axios.post(newBundleUrl, bundleData);
+    this.setState({
+      status: <span> Your bundle is ready for download: <a href={response.data.downloadUrl}>Link</a></span>
+    });
+    console.log(`Got response: ${JSON.stringify(response)}`);
+  }
+
+  handleRemoveProjectParam = (idx) => () => {
+    this.setState({
+      params: this.state.params.filter((projectParam, projectParamIdx) => idx !== projectParamIdx)
+    });
   }
 
   render() {
     return (
       <Container>
-        <Row className="project-title">
-          <Col s={12} className="center-align">
-            <h4>Project Detail</h4>
+        <Row>
+          <Col s={12}>
+            <h5>Project Properties</h5>
           </Col>
         </Row>
-        <Row className="project-info">
+        <Row>
           <Col s={12}>
             <Row>
               <Col s={6} className="center-align">
@@ -136,56 +162,63 @@ class Project extends Component {
                 <span>{this.state.gitBranch}</span>
               </Col>
             </Row>
+            <Row>
+              <Col s={6}>
+                <Row>
+                  <Col s={12}>
+                    <h5>Templates</h5>
+                  </Col>
+                </Row>
+              {this.state.templates.map((template, idx) => (
+                <Row key={template._id}>
+                  <Col s={12}>
+                    <div className="template-detail">
+                      <span>-&nbsp;{template.filePath}</span>
+                    </div>
+                  </Col>
+                </Row>
+              ))}
+              </Col>
+              <Col s={6}>
+                <Row>
+                  <Col s={12}>
+                    <h5>Parameters</h5>
+                  </Col>
+                </Row>
+                <form onSubmit={this.handleFormSubmit}>
+                {this.state.params.map((projectParam, idx) => (
+                  <Row key={projectParam._id}>
+                    <Col s={12} >
+                      <div className="projectparam-input" >
+                        <input
+                          id={`param-input-${idx}`}
+                          type="text"
+                          placeholder={projectParam.name}
+                          value={projectParam.value}
+                          onChange={this.handleProjectParamChange(idx)}
+                        />
+                        <label htmlFor={`param-input-${idx}`}>{projectParam.description}</label>
+                      </div>
+                    </Col>
+                  </Row>
+                ))}
+                  <Row>
+                    <Col s={12}>
+                      <button type="submit" className="small">Make Bundle</button>
+                    </Col>
+                  </Row>
+                </form>
+                <Row>
+                  <Col s={12}>
+                    { this.state.status ? <span className="makebundle-status-msg">{ this.state.status }</span> : ""}
+                  </Col>
+                </Row>
+              </Col>
+            </Row>
           </Col>
         </Row>
-        <Row className="project-params">
-          <Col s={12} className="center-align">
-            <h4>Project Parameters</h4>
-          </Col>
-        </Row>
-        <div className="params-form">
-          <form onSubmit={this.handleFormSubmit}>
-            <Row>
-              <Col s={12} className="input-field">
-                <input 
-                  id="name"
-                  name="name"
-                  type="text"
-                  className="validate"
-                  value={this.getParamValue("name")}
-                  onChange={this.handleParamUpdate}
-                />
-                <label htmlFor="name">Your name</label>
-              </Col>
-            </Row>
-            <Row>
-              <Col s={12} className="input-field">
-                <input 
-                  id="color"
-                  name="color"
-                  type="text"
-                  className="validate"
-                  value={this.getParamValue("color")}
-                  onChange={this.handleParamUpdate}
-                />
-                <label htmlFor="color">Your favorite color (HTML code)</label>
-              </Col>
-            </Row>
-            <Row>
-              <Col s={12}>
-                <button
-                  className="btn-small waves-effect waves-light pink lighten-5 black-text"
-                  type="submit"
-                  name="action">
-                  Generate
-                  <i className="material-icons right" />
-                </button>
-              </Col>
-            </Row>
-          </form>
-        </div>
       </Container>
-    );
+    )
   }
 }
 
