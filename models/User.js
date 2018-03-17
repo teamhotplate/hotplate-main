@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     },
+<<<<<<< HEAD
     email: {
       type: String,
       trim: true,
@@ -14,6 +15,10 @@ const userSchema = new mongoose.Schema({
     },
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     bundles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
+=======
+    projects : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    bundles : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
   });
 
 // Enable the passport-local-mongoose plugin on the User Schema

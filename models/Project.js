@@ -64,7 +64,12 @@ const projectSchema = new mongoose.Schema({
       default: "master"
     },
     templates: {
+<<<<<<< HEAD
       type: [templateSchema]
+=======
+      type: [ String ],
+      trim: true   
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
     },
     params: {
       type: [paramSchema]

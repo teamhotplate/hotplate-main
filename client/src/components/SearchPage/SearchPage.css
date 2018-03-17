@@ -19,7 +19,11 @@
 }
 
 .about-theme {
+<<<<<<< HEAD
   background-color: #8d1313;
+=======
+  background-color: #911e1e;
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 }
 
 /* .gradient-animated {

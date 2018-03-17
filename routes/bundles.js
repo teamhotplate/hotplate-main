@@ -21,10 +21,18 @@ aws.config.update({
 
 const s3 = new aws.S3();
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 //  *****************************
 //  * Promise wrapper functions *
 //  *****************************
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /*  Create a temporary working directory. Return the path of the new directory and 
  a callback that we call when done with the temp dir, to clean it up. */
 
@@ -41,6 +49,10 @@ function mkTempDirP() {
   });
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /* Given a base path, and an output file path, create a tgz archive
  from the contents of the base path. */
 
@@ -59,6 +71,10 @@ function compressBundleP(basePath, bundlePath) {
   });
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /*  Given an s3params dict (and our logged-in aws access id and secret)
  request pre-signing of a PUT request. The pre-signed request can be returned
  to a client, so the client can make S3 calls that require authentication,
@@ -77,6 +93,10 @@ function s3GetSignedUrlP(s3params) {
   })
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /* Given an s3params dict (and our logged-in aws access id and secret)
  upload an object to S3. The data to be uploaded is specified in
  the Body key of the s3params dict. */
@@ -91,6 +111,10 @@ function s3UploadFileP(s3params) {
   });
 };
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /*  Given a file path, read the file and return its contents. */
 
 function readFileP(filePath) {
@@ -102,6 +126,10 @@ function readFileP(filePath) {
   });
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /* Given a file path and data, write the data to a file at
  the specifed path. */
 
@@ -114,10 +142,18 @@ function writeFileP(filePath, data) {
   });
 }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 //  ********************
 //  * Helper functions *
 //  ********************
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
 /* Given a GIT repository URI and branch (or tag) name
 create a temporary directory, and fetch the specified tag/branch
 into the /repo subdirectory of the temp directory. */
@@ -171,7 +207,11 @@ async function makeBundle(repoPath, bundlePath, templateList, templateInputList)
   }, templateParams);
 
   templateList.forEach(async (t) => {
+<<<<<<< HEAD
     const templatePath = `${repoPath}${t.filePath}`;
+=======
+    const templatePath = `${repoPath}${t}`;
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
     const templateSrc = await readFileP(templatePath);
     const rendered = dot.template(templateSrc)(templateParams);
     writeFileP(templatePath, rendered);
@@ -249,7 +289,10 @@ router.post("/", passport.authenticate('jwt-cookiecombo', {
   let newBundleDb = null;
 
   try {
+<<<<<<< HEAD
     newBundleObj['owner'] = req.user._id;
+=======
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
     newBundleDb = await Bundle.create(newBundleObj);
     newBundleDb = await Bundle.findOne({_id: newBundleDb._id})
       .populate('owner', 'username')

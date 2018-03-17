@@ -44,12 +44,19 @@ class SearchPage extends Component {
                 <SearchForm handleSearch={ this.handleSearch }/>
               </Col>
             </Row>
+<<<<<<< HEAD
+=======
+          </div>
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
           <Row>
             <Col s={12}>
               <SearchResults searchResults={ this.state.searchResults } />
             </Col>
           </Row>
+<<<<<<< HEAD
           </div>
+=======
+>>>>>>> 92041ab2cd7a15023397ed612143cdd7b1e5f42b
           <div>
             <Row>
               <Col s={8}>
