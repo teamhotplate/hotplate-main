@@ -15,7 +15,7 @@
 }
 
 .search-results-theme {
-  background-color: rgb(96, 75, 155);
+  background-color: rgb(29, 53, 105);
 }
 
 .gradient {
@@ -56,3 +56,7 @@
       50%{background-position:50% 100%}
       100%{background-position:50% 0%}
   } */
+body {
+  font-family: "Open Sans","OpenSans",sans-serif;
+  background-color: rgb(90, 29, 105);
+}
