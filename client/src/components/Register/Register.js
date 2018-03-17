@@ -1,15 +1,17 @@
+import axios from 'axios';
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-materialize';
 import { Redirect } from 'react-router-dom';
-import './Login.css';
+import './Register.css';
 
-class Login extends Component {
+class Register extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
       username: "",
-      password: ""
+      password: "",
+      email: ""
     };
   }
 
@@ -20,19 +22,23 @@ class Login extends Component {
     });
   }
 
-  handleFormSubmit = (event) => {
+  handleFormSubmit = async (event) => {
     event.preventDefault();
-    const { username, password } = this.state;
+    const { username, password, email } = this.state;
+    console.log(`Ready to send registration request with state: ${JSON.stringify(this.state)}`);
     this.setState({
       username: "",
-      password: ""
+      password: "",
+      email: ""
     });
-    this.props.loginHandler(username, password);
-  }
-
-  handleRegisterClick = (event) => {
-    event.preventDefault();
-    window.location = "/register";
+    const createUserUrl = "/auth/users";
+    try {
+      await axios.post(createUserUrl, { username: username, password: password, email: email });
+      window.location = "/login";
+    } catch(err) {
+      console.error(err);
+    }
+    
   }
 
   render() {
@@ -42,7 +48,7 @@ class Login extends Component {
     return (
       <Container>
         <form onSubmit={this.handleFormSubmit}>
-          <Row className="LoginFormInputRow">
+          <Row className="RegisterFormInputRow">
             <Col s={12}>
               <Row>
                 <Col s={6} className="input-field">
@@ -57,6 +63,19 @@ class Login extends Component {
                   <label htmlFor="username">Username</label>
                 </Col>
                 <Col s={6} className="input-field">
+                  <input 
+                    id="email"
+                    name="email"
+                    type="text"
+                    className="validate"
+                    value={this.state.email}
+                    onChange={this.handleFormChange}
+                  />
+                  <label htmlFor="email">Email</label>
+                </Col>
+              </Row>
+              <Row>
+                <Col s={12} className="input-field">
                   <input
                     id="password"
                     name="password"
@@ -70,14 +89,8 @@ class Login extends Component {
               </Row>
               <Row>
                 <Col s={3}>
-                  <button className="btn waves-effect waves-light red darken-4" type="submit" name="action">Login
+                  <button className="btn waves-effect waves-light red darken-4" type="submit" name="action">Register
                     <i className="material-icons right">send</i>
-                  </button>
-                  <br/><br/>
-                  <button className="btn waves-effect waves-light red darken-4"
-                          type="button" name="register" onClick={this.handleRegisterClick}>
-                    Sign Up
-                    {/* <i className="material-icons right">send</i> */}
                   </button>
                 </Col>
                 <Col s={9}></Col>
@@ -90,4 +103,4 @@ class Login extends Component {
   }
 }
 
-export default Login;
+export default Register;

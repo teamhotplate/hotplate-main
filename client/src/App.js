@@ -5,9 +5,11 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
 import About from './components/About';
+import CreateProjectPage from './components/CreateProjectPage';
 import Header from './components/Header';
 import Login from './components/Login';
 import Project from './components/Project';
+import Register from './components/Register';
 import SearchPage from './components/SearchPage';
 
 import './App.css';
@@ -60,7 +62,9 @@ class App extends Component {
             <Route exact path="/" render={props => <SearchPage {...props}/>} />
             <Route exact path="/about" render={props => <About {...props}/>} />
             <Route exact path="/login" render={props => <Login loginHandler={this.handleLogin} user={this.state.user} {...props} />} />
-            <Route path="/p/:projectName" component={Project} />
+            <Route exact path="/create" render={props => <CreateProjectPage user={this.state.user} {...props} />} />
+            <Route path="/p/:projectName" render={props => <Project user={this.state.user} {...props} />} />
+            <Route exact path="/register" render={props => <Register user={this.state.user} {...props} />} />
           </div>
         </Router>
       </div>

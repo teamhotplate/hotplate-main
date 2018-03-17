@@ -20,6 +20,7 @@ app.use(passport.initialize());
 // Load routes
 app.use('/auth', router.auth);
 app.use('/api', router.api);
+app.use('/api/bundles', router.bundles);
 app.use('/api/projects', router.projects);
 app.use('/', router.client);
   
