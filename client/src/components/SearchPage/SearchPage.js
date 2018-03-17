@@ -36,7 +36,7 @@ class SearchPage extends Component {
 
     // toggles search results visibility
     this.setState({
-      isOpen: !this.state.isOpen
+      isOpen: true
     });
     console.log(this.state);
   }
