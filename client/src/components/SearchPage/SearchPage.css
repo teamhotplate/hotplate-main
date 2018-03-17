@@ -27,7 +27,7 @@ body {
 }
 
 #search-page-background {
-  background-color: red;
+  background-color: rgb(68, 0, 0);
   margin-left: calc(50% - 50vw);
   width: 100vw;
   height:80vw;
