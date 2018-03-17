@@ -9,12 +9,12 @@
   "private": true,
   "scripts": {
     "dev": "concurrently \"nodemon server.js --exec babel-node\" \"npm run client\"",
-    "installDeps": "yarn && cd client && yarn",
-    "build": "babel-node scripts/build.js",
-    "server": "babel-node server.js",
-    "client": "babel-node scripts/start-client.js",
+    "devInstallDeps": "yarn && cd client && yarn",
+    "build": "node scripts/build.js",
+    "server": "node build/server.js",
+    "client": "node scripts/start-client.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "postinstall": "cd client && yarn install && yarn build"
+    "postinstall": "yarn build && cd client && yarn install && yarn build"
   },
   "dependencies": {
     "aws-sdk": "^2.206.0",
@@ -37,6 +37,7 @@
     "tmp": "^0.0.33"
   },
   "devDependencies": {
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
     "concurrently": "^3.5.1",
     "nodemon": "^1.15.1"
   }
