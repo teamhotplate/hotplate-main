@@ -1,9 +1,7 @@
-import childProcess from 'child_process';
-import ncp from 'ncp';
+var childProcess = require('child_process');
 
-const args = ["run build"];
-const opts = { stdio: "inherit", cwd: "client", shell: true };
-const buildProc = childProcess.spawn("npm", args, opts);
-
-
+// Build back-end
+var serverBuildArgs = ["src", "-d", "build"];
+var serverBuildOpts = { stdio: "inherit", shell: true };
+var serverBuildProc = childProcess.spawn("babel", serverBuildArgs, serverBuildOpts);
 
