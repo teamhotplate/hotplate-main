@@ -1,11 +1,28 @@
-.search-form {
-  padding: 24px;
+.search-form-inside {
+  padding: 10px;
 }
 
 #search-query{
-  background-color: #fae2ff;
+  background-color: #420a0a;
 }
 
 #search-button{
   background-color: #c02429;
+}
+
+/* EDITS ALL TEXT INPUT FIELDS INCLUDING LOGIN */
+
+.input-field input[type=text], .main-search {
+  border:rgb(255, 126, 126);
+}
+
+/* label focus color */
+.input-field input[type=text]:focus + label, .main-search {
+color: rgb(255, 180, 180);
+}
+
+/* label underline focus color */
+.input-field input[type=text]:focus, .main-search {
+  border: 1px solid rgb(255, 126, 126);
+  box-shadow: 0 1px 0 0 rgba(80, 0, 0, 0.596);
 }

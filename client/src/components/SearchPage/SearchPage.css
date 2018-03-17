@@ -2,6 +2,41 @@
   padding: 24px;
 }
 
-.theme {
-  background-color: #4b2323;
+.search-theme {
+  background-color: #8d1313;
+}
+
+/* .about-theme {
+  background-color: #3461c4;
+} */
+
+.text-size-default {
+  font-size: 20px;
+}
+
+.search-results-theme {
+  background-color: rgb(105, 29, 29);
+}
+
+.about-theme {
+  background-color: #8d1313;
+}
+
+body {
+  font-family: "Open Sans","OpenSans",sans-serif;
+}
+
+#search-page-background {
+  background-color: red;
+  margin-left: calc(50% - 50vw);
+  width: 100vw;
+  height:80vw;
+}
+
+.hidden {
+  display:none;
+}
+
+.show {
+  display: inline;
 }
