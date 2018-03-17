@@ -10,6 +10,8 @@
   background-color: #c02429;
 }
 
+/* EDITS ALL TEXT INPUT FIELDS INCLUDING LOGIN */
+
 .input-field input[type=text] {
   border:rgb(255, 126, 126);
 }

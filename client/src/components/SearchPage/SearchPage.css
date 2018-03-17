@@ -18,18 +18,8 @@
   background-color: rgb(29, 53, 105);
 }
 
-.gradient {
-
-  /* can be treated like a fallback */
-  background-color: #1d408d;
-
-  /* will be "on top", if browser supports it */
-  background-image: linear-gradient(red, orange);
-
-  /* these will reset other properties, like background-position, but it does know what you mean */
-  background: red;
-  background: linear-gradient(rgb(226, 47, 47), rgb(233, 166, 41));
-
+.about-theme {
+  background-color: #911e1e;
 }
 
 /* .gradient-animated {
@@ -58,5 +48,4 @@
   } */
 body {
   font-family: "Open Sans","OpenSans",sans-serif;
-  background-color: rgb(90, 29, 105);
 }
