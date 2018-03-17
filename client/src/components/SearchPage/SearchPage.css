@@ -1,7 +1,38 @@
+.about-theme {
+  background-color: #8d1313;
+}
+
+body {
+  font-family: "Open Sans","OpenSans",sans-serif;
+}
+
+.container-size {
+  margin-bottom:24px;
+}
+
 .search-page {
   padding: 24px;
 }
 
-.theme {
-  background-color: #4b2323;
+#search-page-background {
+  background-color: rgb(68, 0, 0);
+  margin-left: calc(50% - 50vw);
+  width: 100vw;
+  height:80vw;
+}
+
+.search-theme {
+  background-color: #8d1313;
+}
+
+.search-results-theme {
+  background-color: rgb(105, 29, 29);
+}
+
+.show {
+  display: inline;
+}
+
+.text-size-default {
+  font-size: 20px;
 }

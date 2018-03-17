@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Row, Col } from 'react-materialize';
+import { Col } from 'react-materialize';
 
 import './SearchForm.css';
 
@@ -8,7 +8,7 @@ class SearchForm extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      searchQuery: ""
+      searchQuery: "",
     };
   }
 
@@ -28,31 +28,22 @@ class SearchForm extends Component {
   render() {
     return (
       <div className="search-form">
-        <form onSubmit={this.handleFormSubmit}>
-          <Row className="FormInputRow">
-            <Col s={12}>
-              <Row>
-                <Col s={12} className="input-field">
-                  <input 
-                    id="search-query"
-                    name="searchQuery"
-                    type="text"
-                    className="validate"
-                    value={this.state.searchQuery}
-                    onChange={this.handleFormChange}
-                  />
-                  <label htmlFor="searchQuery white-text">Search</label>
-                </Col>
-              </Row>
-              <Row>
-                <Col s={12}>
-                  <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
-                    <i className="material-icons right" />
-                  </button>
-                </Col>
-              </Row>
+        <form onSubmit={event => this.handleFormSubmit (event)}>
+            <Col s={12} className="input-field">
+              <input 
+                id="search-query"
+                name="searchQuery"
+                type="text"
+                className="validate white-text main-search"
+                value={this.state.searchQuery}
+                onChange={this.handleFormChange}
+              />
+              <label htmlFor="searchQuery specific">Find Templates</label>
+
+              <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
+              <i className="material-icons right" />
+              </button>
             </Col>
-          </Row>
         </form>
       </div>
     );
