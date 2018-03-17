@@ -13,11 +13,10 @@ class About extends Component {
         <Row>
           <Col s={12}>
             <span className="white-text">
-              <h4>Hotplate will forever change the landscape of template generation.</h4>
-              <h5>Hey! Hey! Hey!
-
-
-              </h5>
+              <h2>Build wonderful things</h2>
+              <div className="text-size-default">
+                hotplate is a platform for building customizable and reusable template code. Find a template, and use it in your project.
+              </div>
             </span>
           </Col>
         </Row>

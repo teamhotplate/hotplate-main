@@ -1,22 +1,26 @@
 .search-form {
-  padding: 24px;
+  padding: 0px;
 }
 
 #search-query{
-  background-color: #fffcf1;
+  background-color: #420a0a;
 }
 
 #search-button{
   background-color: #c02429;
 }
 
- /* label focus color */
- .input-field input[type=text]:focus + label {
-  color: white;
+.input-field input[type=text] {
+  border:rgb(255, 126, 126);
+}
+
+/* label focus color */
+.input-field input[type=text]:focus + label {
+color: rgb(255, 180, 180);
 }
 
 /* label underline focus color */
-   .input-field input[type=text]:focus {
-     border-bottom: 1px solid #000;
-     box-shadow: 0 1px 0 0 #000;
-   } 
+.input-field input[type=text]:focus {
+  border: 1px solid rgb(255, 126, 126);
+  box-shadow: 0 1px 0 0 rgba(80, 0, 0, 0.596);
+}

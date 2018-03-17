@@ -39,7 +39,7 @@ class SearchPage extends Component {
       <Container>
         <div className="full-width-bar search-theme">
           <Row>
-            <Col s={8}>
+            <Col s={10}>
               <SearchForm handleSearch={ this.handleSearch }/>
             </Col>
           </Row>
@@ -51,7 +51,7 @@ class SearchPage extends Component {
         </Row>
         <div>
           <Row>
-            <Col s={12}>
+            <Col s={8}>
               <About />
             </Col>
           </Row>
