@@ -12,7 +12,7 @@ import router from './routes';
 const app = express();
 
 // Enable Middleware
-app.use(express.static(path.join(__dirname, 'client/build')));
+app.use(express.static(path.join(__dirname, '../client/build')));
 app.use(bodyParser.json());
 app.use(cookieParser(process.env.JWTSECRET));
 app.use(passport.initialize());
