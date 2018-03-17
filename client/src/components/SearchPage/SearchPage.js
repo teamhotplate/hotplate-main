@@ -43,7 +43,6 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div className="background">
         <Container>
           <div className="full-width-bar search-theme">
             <Row>
@@ -61,7 +60,7 @@ class SearchPage extends Component {
               </Col>
             </Row>
           </span>
-          </div>
+          
           <div>
             <Row>
               <Col s={8}>
@@ -70,8 +69,9 @@ class SearchPage extends Component {
             </Row>
           </div>
           <div id="search-page-background"></div>
+          </div>
         </Container>
-      </div>
+
     );
   }
 }
