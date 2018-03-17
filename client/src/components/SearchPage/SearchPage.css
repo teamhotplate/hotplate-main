@@ -3,32 +3,36 @@
 }
 
 .search-theme {
-  background-color: #8a0000;
+  background-color: #8d1313;
 }
 
 .about-theme {
   background-color: #3461c4;
 }
 
+.text-size-default {
+  font-size: 20px;
+}
+
 .search-results-theme {
-  background-color: rgb(96, 39, 107);
+  background-color: rgb(96, 75, 155);
 }
 
 .gradient {
 
   /* can be treated like a fallback */
-  background-color: #032775;
+  background-color: #1d408d;
 
   /* will be "on top", if browser supports it */
   background-image: linear-gradient(red, orange);
 
   /* these will reset other properties, like background-position, but it does know what you mean */
   background: red;
-  background: linear-gradient(red, orange);
+  background: linear-gradient(rgb(226, 47, 47), rgb(233, 166, 41));
 
 }
 
-.gradient-animated {
+/* .gradient-animated {
   background: linear-gradient(180deg, #ff0000, #ffa500);
   background-size: 400% 400%;
 
@@ -51,4 +55,4 @@
       0%{background-position:50% 0%}
       50%{background-position:50% 100%}
       100%{background-position:50% 0%}
-  }
+  } */
