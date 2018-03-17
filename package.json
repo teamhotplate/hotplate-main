@@ -8,7 +8,7 @@
   "license": "MIT",
   "private": true,
   "scripts": {
-    "dev": "concurrently \"nodemon server.js --exec babel-node\" \"npm run client\"",
+    "dev": "concurrently \"nodemon build/server.js --exec babel-node\" \"yarn run client\"",
     "devInstallDeps": "yarn && cd client && yarn",
     "build": "node scripts/build.js",
     "server": "node build/server.js",
