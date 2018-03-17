@@ -1,13 +1,10 @@
 .Header {
   padding-left: 10px;
   padding-right: 10px;
+  background-color: #c02429;
 }
 
 img.logo {
   padding: 5px;
   height:64px;
-}
-
-.header {
-  background-color: #c02429;
 }
