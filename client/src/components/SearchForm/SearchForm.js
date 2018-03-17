@@ -42,13 +42,15 @@ class SearchForm extends Component {
                     onChange={this.handleFormChange}
                   />
                   <label htmlFor="searchQuery white-text">Search</label>
+
+                  <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
+                  <i className="material-icons right" />
+                  </button>
                 </Col>
               </Row>
               <Row>
                 <Col s={12}>
-                  <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
-                    <i className="material-icons right" />
-                  </button>
+
                 </Col>
               </Row>
             </Col>

@@ -2,9 +2,14 @@ import axios from 'axios';
 import React, { Component } from 'react';
 import { Container, Row, Col } from 'react-materialize';
 
+// Import pages 
 import SearchForm from '../SearchForm';
 import SearchResults from '../SearchResults';
+import About from '../About';
+
+// Import styles
 import './SearchPage.css';
+import '../../css/full-width.css';
 
 class SearchPage extends Component {
 
@@ -31,20 +36,27 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <div className="search-page theme">
-        <Container>
+      <Container>
+        <div className="full-width-bar search-theme">
           <Row>
-            <Col s={12}>
+            <Col s={8}>
               <SearchForm handleSearch={ this.handleSearch }/>
             </Col>
           </Row>
+        </div>
+        <Row>
+          <Col s={12}>
+            <SearchResults searchResults={ this.state.searchResults } />
+          </Col>
+        </Row>
+        <div>
           <Row>
             <Col s={12}>
-              <SearchResults searchResults={ this.state.searchResults } />
+              <About />
             </Col>
           </Row>
-        </Container>
-      </div>
+        </div>
+      </Container>
     );
   }
 }

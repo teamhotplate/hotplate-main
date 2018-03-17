@@ -3,9 +3,20 @@
 }
 
 #search-query{
-  background-color: #fae2ff;
+  background-color: #fffcf1;
 }
 
 #search-button{
   background-color: #c02429;
 }
+
+ /* label focus color */
+ .input-field input[type=text]:focus + label {
+  color: white;
+}
+
+/* label underline focus color */
+   .input-field input[type=text]:focus {
+     border-bottom: 1px solid #000;
+     box-shadow: 0 1px 0 0 #000;
+   } 

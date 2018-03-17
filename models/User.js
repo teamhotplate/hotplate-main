@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
       type: Date,
       default: Date.now
     },
+<<<<<<< HEAD
     email: {
       type: String,
       trim: true,
@@ -14,6 +15,10 @@ const userSchema = new mongoose.Schema({
     },
     projects: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
     bundles: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
+=======
+    projects : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Project' }],
+    bundles : [{ type: mongoose.Schema.Types.ObjectId, ref: 'Bundle' }]
+>>>>>>> uncommited some changes to the master branch. Can't push commits there, so I'm pushing them here.
   });
 
 // Enable the passport-local-mongoose plugin on the User Schema

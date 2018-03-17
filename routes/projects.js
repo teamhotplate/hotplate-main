@@ -267,7 +267,11 @@ router.post("/",  passport.authenticate('jwt-cookiecombo', {
 
   // Create a Project with the data available to us in req.body
   console.log(req.body);
+<<<<<<< HEAD
   let newProjectObj = req.body;
+=======
+  const newProjectObj = req.body;
+>>>>>>> uncommited some changes to the master branch. Can't push commits there, so I'm pushing them here.
   
   const existingDbProject = await Project.findOne({ name: newProjectObj.name });
   if (existingDbProject) {
