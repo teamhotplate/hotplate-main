@@ -36,27 +36,29 @@ class SearchPage extends Component {
 
   render() {
     return (
-      <Container>
-        <div className="full-width-bar search-theme">
+      <div className="background">
+        <Container>
+          <div className="full-width-bar search-theme">
+            <Row>
+              <Col s={12}>
+                <SearchForm handleSearch={ this.handleSearch }/>
+              </Col>
+            </Row>
+          </div>
           <Row>
-            <Col s={10}>
-              <SearchForm handleSearch={ this.handleSearch }/>
+            <Col s={12}>
+              <SearchResults searchResults={ this.state.searchResults } />
             </Col>
           </Row>
-        </div>
-        <Row>
-          <Col s={12}>
-            <SearchResults searchResults={ this.state.searchResults } />
-          </Col>
-        </Row>
-        <div>
-          <Row>
-            <Col s={8}>
-              <About />
-            </Col>
-          </Row>
-        </div>
-      </Container>
+          <div>
+            <Row>
+              <Col s={8}>
+                <About />
+              </Col>
+            </Row>
+          </div>
+        </Container>
+      </div>
     );
   }
 }

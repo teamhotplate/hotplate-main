@@ -13,7 +13,7 @@ class Header extends Component {
   }
   render() {
     return (
-      <Navbar className="Header header" brand={Img} right>
+      <Navbar className="Header" brand={Img} right>
         <li><NavLink to="/">Search</NavLink></li>
         <li><NavLink to="/about">About</NavLink></li>
         { this.props.user ?
