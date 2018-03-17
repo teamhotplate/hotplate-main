@@ -13,7 +13,7 @@ class About extends Component {
         <Row>
           <Col s={12}>
             <span className="white-text">
-              <h2 style={{marginTop:15.00}}>Build wonderful things</h2>
+              <h2 style={{marginTop:0.00}}>Build wonderful things</h2>
               <div className="text-size-default">
                 hotplate is a platform for building customizable and reusable template code. Find a template, and use it in your project.
               </div>
