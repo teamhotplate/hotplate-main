@@ -163,7 +163,19 @@ async function fetchGitRepo(gitUri, gitBranch) {
    repoPath. Once done, roll repoPath up into a tgz archive. */
 
 async function makeBundle(repoPath, bundlePath, templateList, templateInputList) {
-  
+  dot.templateSettings = {
+    evaluate:    /\{\~\{([\s\S]+?)\}\~\}/g,
+    interpolate: /\{\~\{=([\s\S]+?)\}\~\}/g,
+    encode:      /\{\~\{!([\s\S]+?)\}\~\}/g,
+    use:         /\{\~\{#([\s\S]+?)\}\~\}/g,
+    define:      /\{\~\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\~\}/g,
+    conditional: /\{\~\{\?(\?)?\s*([\s\S]*?)\s*\}\~\}/g,
+    iterate:     /\{\~\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\~\})/g,
+    varname: 'it',
+    strip: false,
+    append: true,
+    selfcontained: false
+  };
   let templateParams = {};
   templateParams = templateInputList.reduce((obj, templateInput) => {
     obj[templateInput.inputName] = templateInput.inputValue;
