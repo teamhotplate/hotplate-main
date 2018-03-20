@@ -14,7 +14,7 @@ class About extends Component {
         <Row>
           <Col s={8}>
             <div className="white-text about-theme-light full-width-bar">
-              <h2 style={{marginTop:0.00}}>Build wonderful things</h2>
+              <h2 style={{marginTop:0.00}}>Create wonderful things</h2>
               <div className="text-size-default container-size">
                 hotplate is a platform for building customizable and reusable template code. Find a template, and use it in your project.
               </div>
@@ -31,7 +31,7 @@ class About extends Component {
             <Col s={8}>
                 <h2>Hotplate, What's Cooking?</h2>
                 <div className="text-size-default" style={{marginBottom:20.00}}>
-                Cook up your own projects using Hotplate. Building a new website? Just search a starting template project, personalize it, and download and customize it to your liking.
+                Cook up your own projects using Hotplate. Building a new website? Just search a template, personalize it, download and customize it to your liking.
                 </div>
             </Col>
           </Row>
