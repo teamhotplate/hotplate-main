@@ -4,7 +4,6 @@ import jwtDecode from 'jwt-decode';
 import React, { Component } from 'react';
 import { BrowserRouter as Router, Route } from "react-router-dom";
 
-import About from './components/About';
 import CreateProjectPage from './components/CreateProjectPage';
 import Header from './components/Header';
 import Login from './components/Login';
@@ -60,7 +59,6 @@ class App extends Component {
           <div>
             <Header user={this.state.user} handleLogout={this.handleLogout}/>
             <Route exact path="/" render={props => <SearchPage {...props}/>} />
-            <Route exact path="/about" render={props => <About {...props}/>} />
             <Route exact path="/login" render={props => <Login loginHandler={this.handleLogin} user={this.state.user} {...props} />} />
             <Route exact path="/create" render={props => <CreateProjectPage user={this.state.user} {...props} />} />
             <Route path="/p/:projectName" render={props => <Project user={this.state.user} {...props} />} />
