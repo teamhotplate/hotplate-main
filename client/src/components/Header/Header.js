@@ -13,12 +13,12 @@ class Header extends Component {
   }
   render() {
     return (
-      <Navbar className="Header header" brand={Img} right>
+      <Navbar className="Header" brand={Img} right>
         { this.props.user ? <li><NavLink to="/create">Create</NavLink></li> : "" }
         <li><NavLink to="/">Search</NavLink></li>
         { this.props.user ?
           <li><NavLink to="/" onClick={this.handleLogout}>Log Out</NavLink></li> :
-          <li><NavLink to="/login">Log In</NavLink></li> }     
+          <li><NavLink to="/login">Log In</NavLink></li> }
       </Navbar>
     );
   }

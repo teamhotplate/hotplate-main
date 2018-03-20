@@ -128,80 +128,63 @@ class Project extends Component {
         <Row>
           <Col s={12}>
             <Row>
-              <Col s={6} className="center-align">
-                <span>Project name</span>
+              <Col s={2} className="left-align">
+                <span>Project name:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.name}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>Description</span>
+              <Col s={2} className="left-align">
+                <span>Description:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.description}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>GIT URI</span>
+              <Col s={2} className="left-align">
+                <span>GIT URI:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.gitUri}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>GIT Branch / Tag</span>
+              <Col s={2} className="left-align">
+                <span>GIT Branch / Tag:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.gitBranch}</span>
               </Col>
             </Row>
             <Row>
-              <Col s={6}>
-                <Row>
-                  <Col s={12}>
-                    <h5>Templates</h5>
-                  </Col>
-                </Row>
-              {this.state.templates.map((template, idx) => (
-                <Row key={template._id}>
-                  <Col s={12}>
-                    <div className="template-detail">
-                      <span>-&nbsp;{template.filePath}</span>
-                    </div>
-                  </Col>
-                </Row>
-              ))}
-              </Col>
-              <Col s={6}>
+
+              {/*Parameters Form*/}
+              <Col s={4}>
                 <Row>
                   <Col s={12}>
                     <h5>Parameters</h5>
                   </Col>
                 </Row>
                 <form onSubmit={this.handleFormSubmit}>
-                {this.state.params.map((projectParam, idx) => (
-                  <Row key={projectParam._id}>
-                    <Col s={12} >
-                      <div className="projectparam-input" >
-                        <input
-                          id={`param-input-${idx}`}
-                          type="text"
-                          placeholder={projectParam.name}
-                          value={projectParam.value}
-                          onChange={this.handleProjectParamChange(idx)}
-                        />
-                        <label htmlFor={`param-input-${idx}`}>{projectParam.description}</label>
-                      </div>
-                    </Col>
-                  </Row>
-                ))}
+                  {this.state.params.map((projectParam, idx) => (
+                    <Row key={projectParam._id}>
+                      <Col s={12} >
+                        <div className="projectparam-input" >
+                          <label htmlFor={`param-input-${idx}`}>{projectParam.description}</label>
+                          <input
+                            id={`param-input-${idx}`}
+                            type="text"
+                            placeholder={projectParam.name}
+                            value={projectParam.value}
+                            onChange={this.handleProjectParamChange(idx)}
+                          />
+                        </div>
+                      </Col>
+                    </Row>
+                  ))}
                   <Row>
                     <Col s={12}>
                       <button type="submit" className="small">Make Bundle</button>
@@ -213,6 +196,26 @@ class Project extends Component {
                     { this.state.status ? <span className="makebundle-status-msg">{ this.state.status }</span> : ""}
                   </Col>
                 </Row>
+              </Col>
+
+              <Col s={4} />
+
+              {/* Templates Form */}
+              <Col s={4}>
+                <Row>
+                  <Col s={12}>
+                    <h5>Templates</h5>
+                  </Col>
+                </Row>
+                {this.state.templates.map((template, idx) => (
+                  <Row key={template._id}>
+                    <Col s={12}>
+                      <div className="template-detail">
+                        <span>-&nbsp;{template.filePath}</span>
+                      </div>
+                    </Col>
+                  </Row>
+                ))}
               </Col>
             </Row>
           </Col>
