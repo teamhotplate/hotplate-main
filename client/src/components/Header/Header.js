@@ -19,7 +19,7 @@ class Header extends Component {
         <li><NavLink to="/about">About</NavLink></li>
         { this.props.user ?
           <li><NavLink to="/" onClick={this.handleLogout}>Log Out</NavLink></li> :
-          <li><NavLink to="/login">Log In</NavLink></li> }     
+          <li><NavLink to="/login">Log In</NavLink></li> }
       </Navbar>
     );
   }

@@ -50,17 +50,15 @@ class SearchPage extends Component {
                 <SearchForm handleSearch={ this.handleSearch }/>
               </Col>
             </Row>
-            <span className="">
-              <Row>
-                <Col s={12}>
-                  <SearchResults 
-                    searchResults={ this.state.searchResults } 
-                    show={ this.state.isOpen }
-                  />
-                </Col>
-              </Row>
-            </span>
-          
+            <Row>
+              <Col s={12}>
+                <SearchResults 
+                  searchResults={ this.state.searchResults } 
+                  show={ this.state.isOpen }
+                />
+              </Col>
+            </Row>
+        
             <div>
               <About />
             </div>

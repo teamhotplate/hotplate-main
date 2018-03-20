@@ -40,8 +40,8 @@ class SearchForm extends Component {
               />
               <label htmlFor="searchQuery specific">Find Templates</label>
 
-              <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">Search
-              <i className="material-icons right" />
+              <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">
+                Search
               </button>
             </Col>
         </form>
