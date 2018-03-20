@@ -30,7 +30,7 @@ class About extends Component {
               </div>
             </Col>
             <Col s={8}>
-                <h2>Hotplate, What's Cooking?</h2>
+                <h2>Hotplate, What&#39;s Cooking?</h2>
                 <div className="text-size-default" style={{marginBottom:20.00}}>
                 Cook up your own projects using Hotplate. Building a new website? Just search a template, personalize it, download and customize it to your liking.
                 </div>
@@ -61,7 +61,7 @@ class About extends Component {
               <div className="text-size-default center-align">
                 Add your own templates to hotplate.<br />
                 Why change what works? Keep that code around!<br />
-                Don't start over. Load up a save!
+                Don&#39;t start over. Load up a save!
               </div>
             </Col>
           </Row>
