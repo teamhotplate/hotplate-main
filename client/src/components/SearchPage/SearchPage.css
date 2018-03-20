@@ -1,5 +1,9 @@
-.about-theme {
+.about-theme-light {
   background-color: #8d1313;
+}
+
+.about-theme-dark {
+  background-color: rgb(68, 0, 0);
 }
 
 body {
