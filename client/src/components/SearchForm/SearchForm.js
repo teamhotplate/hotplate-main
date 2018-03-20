@@ -38,7 +38,7 @@ class SearchForm extends Component {
                 value={this.state.searchQuery}
                 onChange={this.handleFormChange}
               />
-              <label htmlFor="searchQuery specific">Find Templates</label>
+              <label htmlFor="searchQuery specific" style={{marginLeft:12}}>Find Templates</label>
 
               <button className="btn waves-effect waves-light" id="search-button" type="submit" name="action">
                 Search

@@ -47,7 +47,7 @@ class About extends Component {
           <Row>
             <Col s={5} />
             <Col s={2}>
-              <Link to="/login">
+              <Link to="/register">
                 <button className="btn waves-effect waves-light" id="signup-button" name="action" href="/login">
                   Sign up
                 </button>
@@ -56,10 +56,12 @@ class About extends Component {
             <Col s={5} />
           </Row>
           <Row>
-            <Col s={4} />
+            <Col s={2} />
             <Col s={8}>
-              <div className="text-size-default">
-                Add your own templates to hotplate.
+              <div className="text-size-default center-align">
+                Add your own templates to hotplate.<br />
+                Why change what works? Keep that code around!<br />
+                Don't start over. Load up a save!
               </div>
             </Col>
           </Row>
