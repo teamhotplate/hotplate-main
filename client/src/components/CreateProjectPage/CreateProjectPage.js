@@ -13,7 +13,8 @@ class CreateProjectPage extends Component {
       gitUri: "",
       gitBranch: "",
       templates: [],
-      params: []
+      params: [],
+      nameTaken: false
     };
   }
 
@@ -36,8 +37,20 @@ class CreateProjectPage extends Component {
   handleSubmit = async (event) => {
     event.preventDefault();
     const createProjectUrl = '/api/projects';
-    const response = await axios.post(createProjectUrl, this.state);
-    window.location = `/p/${response.data.name}`;
+    let response = {};
+    try {
+      response = await axios.post(createProjectUrl, this.state);
+      window.location = `/p/${response.data.name}`;
+    } catch(err) {
+      const statusCode = err.response.status;
+      if (statusCode === 409) {
+        console.log("Project name unavailable.");
+        const nameField = document.getElementById("name");
+        nameField.classList.remove("valid");
+        nameField.classList.add("invalid");
+        this.setState({nameTaken: true});
+      }
+    }
   }
 
   handleAddTemplate = () => {
@@ -110,6 +123,7 @@ class CreateProjectPage extends Component {
                     onChange={this.handleFormUpdate}
                   />
                   <label htmlFor="name">Project name (required)</label>
+                  <div><span className="name-error">{ this.state.nameTaken ? "Name already taken" : ""}</span></div>
                 </Col>
               </Row>
               <Row>
