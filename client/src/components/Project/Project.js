@@ -128,37 +128,34 @@ class Project extends Component {
         <Row>
           <Col s={12}>
             <Row>
-              <Col s={6} className="center-align">
-                <span>Project name</span>
+              <Col s={2} className="left-align">
+                <span>Project name:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.name}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>Description</span>
+              <Col s={2} className="left-align">
+                <span>Description:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.description}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>GIT URI</span>
+              <Col s={2} className="left-align">
+                <span>GIT URI:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.gitUri}</span>
               </Col>
             </Row>
-            <hr/>
             <Row>
-              <Col s={6} className="center-align">
-                <span>GIT Branch / Tag</span>
+              <Col s={2} className="left-align">
+                <span>GIT Branch / Tag:</span>
               </Col>
-              <Col s={6}>
+              <Col s={8}>
                 <span>{this.state.gitBranch}</span>
               </Col>
             </Row>
@@ -190,6 +187,7 @@ class Project extends Component {
                   <Row key={projectParam._id}>
                     <Col s={12} >
                       <div className="projectparam-input" >
+                        <label htmlFor={`param-input-${idx}`}>{projectParam.description}</label>
                         <input
                           id={`param-input-${idx}`}
                           type="text"
@@ -197,7 +195,6 @@ class Project extends Component {
                           value={projectParam.value}
                           onChange={this.handleProjectParamChange(idx)}
                         />
-                        <label htmlFor={`param-input-${idx}`}>{projectParam.description}</label>
                       </div>
                     </Col>
                   </Row>
