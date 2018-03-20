@@ -18,13 +18,13 @@ class SearchResults extends Component {
       show = (
         <div className="search-results search-results-theme">
           <Container>
-            <table className="striped">
+            <table className="highlight">
               <tbody>
                 {this.props.searchResults.map((project) => {
                   return (
-                    <tr key={project._id}>
-                      <td><Link to={"/p/" + project.name}>{project.name}</Link></td>
-                      <td className="center-align">{project.description}</td>
+                    <tr key={project._id} className="search-results-table-dark">
+                      <td className="results-text center-align"><Link to={"/p/" + project.name}>{project.name}</Link></td>
+                      <td className="center-align grey-text">{project.description}</td>
                     </tr>
                   );
                 })}
